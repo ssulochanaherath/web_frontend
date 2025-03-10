@@ -28,35 +28,35 @@ function Dashboard() {
             <Sidebar />
 
             {/* Main Content */}
-            <main className="flex-1 p-10">
-                <h2 className="text-4xl font-bold mb-6">Now Playing</h2>
+            <main className="flex-1 p-8 md:p-12">
+                <h2 className="text-4xl font-bold mb-8 tracking-tight">🎧 Now Playing</h2>
 
-                <div className="bg-white/10 p-8 rounded-2xl shadow-xl border border-white/10 backdrop-blur-md">
-                    <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="w-40 h-40 bg-gray-700 rounded-xl flex justify-center items-center text-lg font-semibold text-center">
+                <div className="bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl transition duration-300">
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                        <div className="w-44 h-44 bg-gradient-to-br from-purple-700 to-pink-600 rounded-2xl flex justify-center items-center text-xl font-bold shadow-inner shadow-purple-900 text-center">
                             🎵 {currentTrack.title}
                         </div>
 
-                        <div className="flex-1">
-                            <h3 className="text-2xl font-bold">{currentTrack.title}</h3>
-                            <p className="text-white/70">{currentTrack.artist}</p>
+                        <div className="flex-1 w-full">
+                            <h3 className="text-3xl font-bold mb-1">{currentTrack.title}</h3>
+                            <p className="text-white/60 mb-6">{currentTrack.artist}</p>
 
-                            <div className="mt-6 flex items-center gap-4">
-                                <button className="bg-purple-600 p-3 rounded-full hover:bg-purple-500 transition">
+                            <div className="flex items-center gap-5 mb-6">
+                                <button className="bg-purple-600 p-3 rounded-full hover:bg-purple-500 hover:scale-105 transition-all duration-200">
                                     <SkipBack />
                                 </button>
                                 <button
                                     onClick={togglePlay}
-                                    className="bg-purple-600 p-4 rounded-full hover:bg-purple-500 transition scale-105"
+                                    className="bg-purple-700 p-5 rounded-full hover:bg-purple-600 hover:scale-110 transition-all duration-200"
                                 >
-                                    {playing ? <Pause /> : <Play />}
+                                    {playing ? <Pause size={28} /> : <Play size={28} />}
                                 </button>
-                                <button className="bg-purple-600 p-3 rounded-full hover:bg-purple-500 transition">
+                                <button className="bg-purple-600 p-3 rounded-full hover:bg-purple-500 hover:scale-105 transition-all duration-200">
                                     <SkipForward />
                                 </button>
                             </div>
 
-                            <div className="flex items-center gap-4 mt-6">
+                            <div className="flex items-center gap-4">
                                 <Volume2 />
                                 <input
                                     type="range"
@@ -64,26 +64,31 @@ function Dashboard() {
                                     max="100"
                                     value={volume}
                                     onChange={handleVolumeChange}
-                                    className="w-full"
+                                    className="w-full accent-purple-600 cursor-pointer"
                                 />
-                                <span>{volume}%</span>
+                                <span className="text-sm text-white/70">{volume}%</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 className="text-2xl font-semibold mt-10 mb-4">Playlist</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {playlist.map((track, index) => (
-                        <div
-                            key={index}
-                            onClick={() => handleTrackClick(track)}
-                            className="bg-white/10 p-4 rounded-xl hover:bg-purple-600/30 transition cursor-pointer border border-white/10"
-                        >
-                            <h4 className="text-lg font-bold">{track.title}</h4>
-                            <p className="text-white/60">{track.artist}</p>
-                        </div>
-                    ))}
+                <h3 className="text-2xl font-semibold mt-12 mb-5 tracking-tight">🎶 Playlist</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {playlist.map((track, index) => {
+                        const isCurrent = currentTrack.title === track.title;
+                        return (
+                            <div
+                                key={index}
+                                onClick={() => handleTrackClick(track)}
+                                className={`p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow ${
+                                    isCurrent ? 'ring-2 ring-purple-500' : ''
+                                }`}
+                            >
+                                <h4 className="text-lg font-semibold">{track.title}</h4>
+                                <p className="text-sm text-white/60">{track.artist}</p>
+                            </div>
+                        );
+                    })}
                 </div>
             </main>
         </div>
