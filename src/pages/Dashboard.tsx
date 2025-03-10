@@ -1,7 +1,7 @@
-// pages/Dashboard.tsx
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext'; // Import useTheme
 
 function Dashboard() {
     const [playing, setPlaying] = useState(false);
@@ -19,12 +19,26 @@ function Dashboard() {
         { title: 'As It Was', artist: 'Harry Styles' },
     ];
 
+    const { theme } = useTheme(); // Access theme from context
+
     const togglePlay = () => setPlaying(!playing);
     const handleVolumeChange = (e) => setVolume(e.target.value);
     const handleTrackClick = (track) => setCurrentTrack(track);
 
+    // Map theme to background class
+    const getThemeClass = () => {
+        switch (theme) {
+            case 'light':
+                return 'bg-gradient-to-br from-gray-100 via-white to-gray-300 text-black';
+            case 'purple':
+                return 'bg-gradient-to-br from-purple-800 via-purple-900 to-black text-white';
+            default:
+                return 'bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white';
+        }
+    };
+
     return (
-        <div className="min-h-screen flex bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white font-sans">
+        <div className={`min-h-screen flex font-sans transition-all duration-500 ${getThemeClass()}`}>
             <Sidebar />
 
             {/* Main Content */}
