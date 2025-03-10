@@ -17,34 +17,34 @@ function Login() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600">
-            <div className="bg-white/10 backdrop-blur-lg border border-white/30 p-12 rounded-3xl shadow-2xl w-full max-w-lg text-white">
-                <div className="flex flex-col items-center mb-8">
-                    <Music className="w-16 h-16 text-white mb-6 animate-pulse" />
-                    <h2 className="text-5xl font-extrabold text-center tracking-widest text-white">Login to Your Music World</h2>
-                    <p className="text-lg opacity-80 mt-2 text-center">Feel the rhythm. Join the vibe.</p>
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+            <div className="bg-black/60 backdrop-blur-lg border border-white/20 p-8 rounded-xl shadow-xl w-full max-w-sm text-white opacity-90 transform transition-all duration-500 ease-in-out hover:scale-105">
+                <div className="flex flex-col items-center mb-6">
+                    <Music className="w-16 h-16 text-white mb-4 animate-pulse" />
+                    <h2 className="text-3xl font-bold text-center tracking-widest text-white">Login to Your Music World</h2>
+                    <p className="text-sm opacity-70 mt-2 text-center">Feel the rhythm. Join the vibe.</p>
                 </div>
                 {message && (
-                    <p className="text-center text-sm text-green-300 mb-4 transition-opacity duration-300">{message}</p>
+                    <p className="text-center text-sm text-green-300 mb-4 opacity-0 animate-fadeIn transition-opacity duration-500">{message}</p>
                 )}
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="mb-6">
-                        <label className="block text-sm mb-2">Email</label>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="mb-4">
+                        <label className="block text-sm mb-2 opacity-80">Email</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-6 py-4 rounded-md bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300"
+                            className="w-full px-4 py-3 rounded-md bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300"
                             placeholder="Enter your email"
                         />
                     </div>
-                    <div className="mb-6">
-                        <label className="block text-sm mb-2">Password</label>
+                    <div className="mb-4">
+                        <label className="block text-sm mb-2 opacity-80">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-6 py-4 rounded-md bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300"
+                            className="w-full px-4 py-3 rounded-md bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300"
                             placeholder="Enter your password"
                         />
                     </div>
@@ -55,7 +55,7 @@ function Login() {
                         Login
                     </button>
                 </form>
-                <div className="flex justify-center items-center mt-8">
+                <div className="flex justify-center items-center mt-6">
                     <p className="text-sm text-white opacity-70">Don't have an account? <a href="#" className="text-purple-300 hover:underline">Sign up</a></p>
                 </div>
             </div>
