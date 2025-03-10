@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Music } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Importing useNavigate hook
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate(); // Use navigate to programmatically navigate
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -13,11 +15,13 @@ function Login() {
             setMessage('Please fill in both fields.');
         } else {
             setMessage(`🎶 Logged in as: ${email}`);
+            // Navigate to dashboard after successful login
+            setTimeout(() => navigate('/dashboard'), 1000); // Delay to show login message
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+        <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://example.com/your-image.jpg')" }}>
             <div className="bg-black/60 backdrop-blur-lg border border-white/20 p-8 rounded-xl shadow-xl w-full max-w-sm text-white opacity-90 transform transition-all duration-500 ease-in-out hover:scale-105">
                 <div className="flex flex-col items-center mb-6">
                     <Music className="w-16 h-16 text-white mb-4 animate-pulse" />
