@@ -9,9 +9,9 @@ function Library() {
         switch (theme) {
             case 'light':
                 return 'bg-gradient-to-br from-gray-100 via-white to-gray-300 text-black';
-            case 'purple':
-                return 'bg-gradient-to-br from-purple-800 via-purple-900 to-black text-white';
-            default:
+            case 'neutral':
+                return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white';
+            case 'dark':
                 return 'bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white';
         }
     };

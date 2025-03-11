@@ -8,8 +8,9 @@ function Settings() {
         switch (theme) {
             case 'light':
                 return 'bg-gradient-to-br from-gray-100 via-white to-gray-300 text-black';
-            case 'purple':
-                return 'bg-gradient-to-br from-purple-800 via-purple-900 to-black text-white';
+            case 'neutral':
+                return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white';
+            case 'dark':
             default:
                 return 'bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white';
         }
@@ -26,12 +27,12 @@ function Settings() {
 
                     <select
                         value={theme}
-                        onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'purple')} // Update theme globally
+                        onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'neutral')} // Update theme globally
                         className="w-full p-3 rounded-lg text-base text-black focus:outline-none bg-white"
                     >
                         <option value="dark">Dark Theme</option>
                         <option value="light">Light Theme</option>
-                        <option value="purple">Purple Theme</option>
+                        <option value="neutral">Neutral Theme</option>
                     </select>
 
                     <p className="text-sm text-white/60 mt-4">

@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
-type Theme = 'light' | 'dark' | 'purple';
+type Theme = 'light' | 'dark' | 'neutral'; // Removed 'purple', added 'neutral' if you want an extra option
 
 interface ThemeContextProps {
     theme: Theme;
