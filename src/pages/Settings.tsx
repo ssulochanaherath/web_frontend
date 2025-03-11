@@ -1,8 +1,8 @@
-import { useTheme } from '../context/ThemeContext'; // Import the useTheme hook
+import { useTheme } from '../context/ThemeContext';
 import Sidebar from '../components/Sidebar';
 
 function Settings() {
-    const { theme, setTheme } = useTheme(); // Access theme and setTheme
+    const { theme, setTheme } = useTheme();
 
     const getThemeBackground = () => {
         switch (theme) {

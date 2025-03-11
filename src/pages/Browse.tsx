@@ -1,5 +1,5 @@
 import Sidebar from '../components/Sidebar';
-import { useTheme } from '../context/ThemeContext'; // Import the useTheme hook
+import { useTheme } from '../context/ThemeContext';
 
 function Browse() {
     const { theme } = useTheme();

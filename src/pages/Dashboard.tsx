@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext'; // Import useTheme
-
+import { useTheme } from '../context/ThemeContext';
 function Dashboard() {
     const [playing, setPlaying] = useState(false);
     const [volume, setVolume] = useState(50);
