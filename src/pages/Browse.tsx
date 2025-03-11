@@ -2,9 +2,8 @@ import Sidebar from '../components/Sidebar';
 import { useTheme } from '../context/ThemeContext'; // Import the useTheme hook
 
 function Browse() {
-    const { theme } = useTheme(); // Access theme from context
+    const { theme } = useTheme();
 
-    // Map theme to background class
     const getThemeClass = () => {
         switch (theme) {
             case 'light':
