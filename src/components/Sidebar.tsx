@@ -22,7 +22,7 @@ const Sidebar = () => {
             <aside className="fixed top-0 left-0 z-40 h-full w-20 bg-black/60 backdrop-blur-xl border-r border-white/10 shadow-xl flex flex-col items-center py-6 rounded-r-2xl">
                 {/* Header Icon */}
                 <div className="mb-10">
-                    <Music2 className="w-6 h-6 text-purple-400 hover:scale-110 transition-transform duration-200" />
+                    <Music2 className="w-6 h-6 text-teal-400 hover:scale-110 transition-transform duration-200" />
                 </div>
 
                 {/* Navigation Icons */}
@@ -33,8 +33,8 @@ const Sidebar = () => {
                             to={link.path}
                             className={`group relative p-3 rounded-xl transition-all duration-200 ease-in-out hover:bg-purple-500/10 hover:shadow-md
                                 ${location.pathname === link.path
-                                ? 'bg-purple-500/20 text-purple-400 shadow-lg'
-                                : 'text-white/80 hover:text-purple-300'}`}
+                                ? 'bg-teal-500/20 text-teal-500 shadow-lg'
+                                : 'text-white/80 hover:text-teal-300'}`}
                         >
                             {link.icon}
                             {/* Tooltip */}
@@ -49,7 +49,7 @@ const Sidebar = () => {
                 <div className="mb-4">
                     <button
                         onClick={handleSignOut}
-                        className="group relative p-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all duration-200 shadow-md hover:shadow-lg"
+                        className="group relative p-3 rounded-xl bg-teal-400 hover:bg-teal-500 text-white transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                         <LogOut className="w-5 h-5" />
                         {/* Tooltip */}
