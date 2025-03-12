@@ -1,69 +1,119 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Music2, LogOut, Home, Library, Settings, Search } from 'lucide-react';
+import { useState } from 'react';
+import Sidebar from '../components/Sidebar';
+import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
-const Sidebar = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+function Dashboard() {
+    const [playing, setPlaying] = useState(false);
+    const [volume, setVolume] = useState(50);
+    const [currentTrack, setCurrentTrack] = useState({
+        title: 'Blinding Lights',
+        artist: 'The Weeknd',
+    });
 
-    const handleSignOut = () => {
-        navigate('/login');
-    };
-
-    const navLinks = [
-        { path: '/dashboard', label: 'Home', icon: <Home className="w-5 h-5" /> },
-        { path: '/browse', label: 'Browse', icon: <Search className="w-5 h-5" /> },
-        { path: '/library', label: 'Library', icon: <Library className="w-5 h-5" /> },
-        { path: '/settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
+    const playlist = [
+        { title: 'Blinding Lights', artist: 'The Weeknd' },
+        { title: 'Levitating', artist: 'Dua Lipa' },
+        { title: 'Watermelon Sugar', artist: 'Harry Styles' },
+        { title: 'Save Your Tears', artist: 'The Weeknd' },
+        { title: 'As It Was', artist: 'Harry Styles' },
     ];
 
+    const { theme } = useTheme(); // Access theme from context
+
+    const togglePlay = () => setPlaying(!playing);
+    const handleVolumeChange = (e) => setVolume(e.target.value);
+    const handleTrackClick = (track) => setCurrentTrack(track);
+
+    // Map theme to background class
+    const getThemeClass = () => {
+        switch (theme) {
+            case 'light':
+                return 'bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300 text-black';
+            case 'neutral':
+                return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white'; // This is your neutral theme
+            case 'dark':
+            default:
+                return 'bg-gradient-to-br from-black via-zinc-900 to-gray-950 text-white';
+        }
+    };
+
+
+
     return (
-        <div className="relative flex">
-            {/* Sidebar */}
-            <aside className="fixed top-0 left-0 z-40 h-full w-20 bg-black/60 backdrop-blur-xl border-r border-white/10 shadow-xl flex flex-col items-center py-6 rounded-r-2xl">
-                {/* Header Icon */}
-                <div className="mb-10">
-                    <Music2 className="w-6 h-6 text-teal-400 hover:scale-110 transition-transform duration-200" />
+        <div className={`min-h-screen flex font-sans transition-all duration-500 ${getThemeClass()}`}>
+            <Sidebar />
+
+            {/* Main Content */}
+            <main className="flex-1 p-8 md:p-12">
+                <h2 className="text-4xl font-bold mb-8 tracking-tight">🎧 Now Playing</h2>
+
+                <div className="bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl transition duration-300">
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                        <div className="w-44 h-44 bg-gradient-to-br from-teal-600 to-cyan-400 rounded-2xl flex justify-center items-center text-xl font-bold shadow-inner shadow-teal-900 text-center">
+                            🎵 {currentTrack.title}
+                        </div>
+
+
+                        <div className="flex-1 w-full">
+                            <h3 className="text-3xl font-bold mb-1">{currentTrack.title}</h3>
+                            <p className="text-white/60 mb-6">{currentTrack.artist}</p>
+
+                            <div className="flex items-center gap-5 mb-6">
+                                <button className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200">
+                                    <SkipBack />
+                                </button>
+                                <button
+                                    onClick={togglePlay}
+                                    className="bg-teal-700 p-5 rounded-full hover:bg-teal-600 hover:scale-110 transition-all duration-200"
+                                >
+                                    {playing ? <Pause size={28} /> : <Play size={28} />}
+                                </button>
+                                <button className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200">
+                                    <SkipForward />
+                                </button>
+
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <Volume2 />
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={volume}
+                                    onChange={handleVolumeChange}
+                                    className="w-full accent-teal-600 cursor-pointer"
+                                />
+
+                                <span className="text-sm text-white/70">{volume}%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Navigation Icons */}
-                <nav className="flex flex-col items-center gap-4 flex-grow">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`group relative p-3 rounded-xl transition-all duration-200 ease-in-out hover:bg-purple-500/10 hover:shadow-md
-                                ${location.pathname === link.path
-                                ? 'bg-teal-500/20 text-teal-500 shadow-lg'
-                                : 'text-white/80 hover:text-teal-300'}`}
-                        >
-                            {link.icon}
-                            {/* Tooltip */}
-                            <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg">
-                                {link.label}
-                            </span>
-                        </Link>
-                    ))}
-                </nav>
+                <h3 className="text-2xl font-semibold mt-12 mb-5 tracking-tight">🎶 Playlist</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {playlist.map((track, index) => {
+                        const isCurrent = currentTrack.title === track.title;
+                        return (
+                            <div
+                                key={index}
+                                onClick={() => handleTrackClick(track)}
+                                className={`p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-teal-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow ${
+                                    isCurrent ? 'ring-2 ring-teal-500' : ''
+                                }`}
+                            >
 
-                {/* Sign Out Button */}
-                <div className="mb-4">
-                    <button
-                        onClick={handleSignOut}
-                        className="group relative p-3 rounded-xl bg-teal-400 hover:bg-teal-500 text-white transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                        <LogOut className="w-5 h-5" />
-                        {/* Tooltip */}
-                        <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg">
-                            Sign Out
-                        </span>
-                    </button>
+                            <h4 className="text-lg font-semibold">{track.title}</h4>
+                                <p className="text-sm text-white/60">{track.artist}</p>
+                            </div>
+                        );
+                    })}
                 </div>
-            </aside>
-
-            {/* Page Content */}
-            <div className="flex-1 ml-20 transition-all duration-300 ease-in-out" />
+            </main>
         </div>
     );
-};
+}
 
-export default Sidebar;
+export default Dashboard;
