@@ -6,10 +6,6 @@ import { useTheme } from '../context/ThemeContext';
 function Dashboard() {
     const [playing, setPlaying] = useState(false);
     const [volume, setVolume] = useState(50);
-    const [currentTrack, setCurrentTrack] = useState({
-        title: 'Blinding Lights',
-        artist: 'The Weeknd',
-    });
 
     const playlist = [
         { title: 'Blinding Lights', artist: 'The Weeknd' },
@@ -19,26 +15,44 @@ function Dashboard() {
         { title: 'As It Was', artist: 'Harry Styles' },
     ];
 
-    const { theme } = useTheme(); // Access theme from context
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    const currentTrack = playlist[currentTrackIndex];
+
+    const { theme } = useTheme();
 
     const togglePlay = () => setPlaying(!playing);
     const handleVolumeChange = (e) => setVolume(e.target.value);
-    const handleTrackClick = (track) => setCurrentTrack(track);
 
-    // Map theme to background class
+    const handleTrackClick = (track, index) => {
+        setCurrentTrackIndex(index);
+        setPlaying(true);
+    };
+
+    const handleNextTrack = () => {
+        setCurrentTrackIndex((prevIndex) =>
+            prevIndex === playlist.length - 1 ? 0 : prevIndex + 1
+        );
+        setPlaying(true);
+    };
+
+    const handlePrevTrack = () => {
+        setCurrentTrackIndex((prevIndex) =>
+            prevIndex === 0 ? playlist.length - 1 : prevIndex - 1
+        );
+        setPlaying(true);
+    };
+
     const getThemeClass = () => {
         switch (theme) {
             case 'light':
                 return 'bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300 text-black';
             case 'neutral':
-                return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white'; // This is your neutral theme
+                return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white';
             case 'dark':
             default:
                 return 'bg-gradient-to-br from-black via-zinc-900 to-gray-950 text-white';
         }
     };
-
-
 
     return (
         <div className={`min-h-screen flex font-sans transition-all duration-500 ${getThemeClass()}`}>
@@ -54,25 +68,31 @@ function Dashboard() {
                             🎵 {currentTrack.title}
                         </div>
 
-
                         <div className="flex-1 w-full">
                             <h3 className="text-3xl font-bold mb-1">{currentTrack.title}</h3>
                             <p className="text-white/60 mb-6">{currentTrack.artist}</p>
 
                             <div className="flex items-center gap-5 mb-6">
-                                <button className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200">
+                                <button
+                                    onClick={handlePrevTrack}
+                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200"
+                                >
                                     <SkipBack />
                                 </button>
+
                                 <button
                                     onClick={togglePlay}
                                     className="bg-teal-700 p-5 rounded-full hover:bg-teal-600 hover:scale-110 transition-all duration-200"
                                 >
                                     {playing ? <Pause size={28} /> : <Play size={28} />}
                                 </button>
-                                <button className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200">
+
+                                <button
+                                    onClick={handleNextTrack}
+                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200"
+                                >
                                     <SkipForward />
                                 </button>
-
                             </div>
 
                             <div className="flex items-center gap-4">
@@ -85,7 +105,6 @@ function Dashboard() {
                                     onChange={handleVolumeChange}
                                     className="w-full accent-teal-600 cursor-pointer"
                                 />
-
                                 <span className="text-sm text-white/70">{volume}%</span>
                             </div>
                         </div>
@@ -95,17 +114,16 @@ function Dashboard() {
                 <h3 className="text-2xl font-semibold mt-12 mb-5 tracking-tight">🎶 Playlist</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {playlist.map((track, index) => {
-                        const isCurrent = currentTrack.title === track.title;
+                        const isCurrent = currentTrackIndex === index;
                         return (
                             <div
                                 key={index}
-                                onClick={() => handleTrackClick(track)}
+                                onClick={() => handleTrackClick(track, index)}
                                 className={`p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-teal-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow ${
                                     isCurrent ? 'ring-2 ring-teal-500' : ''
                                 }`}
                             >
-
-                            <h4 className="text-lg font-semibold">{track.title}</h4>
+                                <h4 className="text-lg font-semibold">{track.title}</h4>
                                 <p className="text-sm text-white/60">{track.artist}</p>
                             </div>
                         );
