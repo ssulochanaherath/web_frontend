@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
+import ColorThief from 'colorthief';
 
 function Dashboard() {
     const audioRef = useRef(null);
@@ -18,14 +19,15 @@ function Dashboard() {
     const [isRepeat, setIsRepeat] = useState(false);
     const [isShuffle, setIsShuffle] = useState(false);
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    const [trackColor, setTrackColor] = useState('');
     const { theme } = useTheme();
 
     const playlist = [
-        { title: 'Blinding Lights', artist: 'The Weeknd', url: '/music/blinding-lights.mp3' },
-        { title: 'Levitating', artist: 'Dua Lipa', url: '/music/levitating.mp3' },
-        { title: 'Watermelon Sugar', artist: 'Harry Styles', url: '/music/watermelon-sugar.mp3' },
-        { title: 'Save Your Tears', artist: 'The Weeknd', url: '/music/save-your-tears.mp3' },
-        { title: 'As It Was', artist: 'Harry Styles', url: '/music/as-it-was.mp3' },
+        { title: 'Blinding Lights', artist: 'The Weeknd', url: '/music/blinding-lights.mp3', image: '/images/blinding-lights.jpg' },
+        { title: 'Levitating', artist: 'Dua Lipa', url: '/music/levitating.mp3', image: '/images/levitating.jpg' },
+        { title: 'Watermelon Sugar', artist: 'Harry Styles', url: '/music/watermelon-sugar.mp3', image: '/images/watermelon-sugar.jpg' },
+        { title: 'Save Your Tears', artist: 'The Weeknd', url: '/music/save-your-tears.mp3', image: '/images/save-your-tears.jpg' },
+        { title: 'As It Was', artist: 'Harry Styles', url: '/music/as-it-was.mp3', image: '/images/as-it-was.jpg' },
     ];
     const currentTrack = playlist[currentTrackIndex];
 
@@ -50,6 +52,17 @@ function Dashboard() {
             else audioRef.current.pause();
         }
     }, [playing, currentTrackIndex]);
+
+    useEffect(() => {
+        const imgElement = new Image();
+        imgElement.src = currentTrack.image;
+        imgElement.onload = () => {
+            const colorThief = new ColorThief();
+            const color = colorThief.getColor(imgElement);
+            const rgbColor = `rgb(${color.join(', ')})`;
+            setTrackColor(rgbColor);
+        };
+    }, [currentTrackIndex]);
 
     const togglePlay = () => setPlaying(!playing);
     const handleNextTrack = () => {
@@ -114,9 +127,6 @@ function Dashboard() {
         }
     };
 
-    // Get the current track's gradient color to match the volume slider
-    const volumeTrackColor = trackColors[currentTrackIndex];
-
     return (
         <div className={`min-h-screen flex font-sans ${getThemeClass()} transition-all duration-500`}>
             <Sidebar />
@@ -131,10 +141,8 @@ function Dashboard() {
                 />
 
                 <div className="flex flex-col md:flex-row items-center gap-10">
-                    <div
-                        className={`w-48 h-48 bg-gradient-to-br ${trackColors[currentTrackIndex]} rounded-3xl flex items-center justify-center text-center text-2xl font-bold text-white shadow-inner transition-all duration-500`}
-                    >
-                        🎵 {currentTrack.title}
+                    <div className={`w-48 h-48 bg-gradient-to-br ${trackColors[currentTrackIndex]} rounded-3xl flex items-center justify-center text-center text-2xl font-bold text-white shadow-inner transition-all duration-500`}>
+                        <img src={currentTrack.image} alt={currentTrack.title} className="w-full h-full object-cover rounded-3xl" />
                     </div>
 
                     <div className="flex-1 w-full">
@@ -149,13 +157,17 @@ function Dashboard() {
                                 max={duration || 0}
                                 value={currentTime}
                                 onChange={handleSeek}
-                                className="w-full mx-4 accent-pink-500 hover:accent-fuchsia-500"
+                                className="w-full mx-4 accent-teal-500 hover:accent-teal-300"
                             />
                             <span>{formatTime(duration)}</span>
                         </div>
 
                         <div className="flex items-center gap-4 flex-wrap">
-                            <button onClick={toggleShuffle} className={`p-2 rounded-full hover:bg-white/10 ${isShuffle && 'bg-white/10 ring-2 ring-purple-400'}`}>
+                            <button
+                                onClick={toggleShuffle}
+                                className={`p-2 rounded-full hover:bg-white/10 ${isShuffle && 'bg-white/10 ring-2 ring-teal-900'}`}
+                                style={{ borderColor: trackColor, color: trackColor }}
+                            >
                                 <Shuffle />
                             </button>
                             <button onClick={handlePrevTrack} className="p-3 rounded-full hover:bg-white/10">
@@ -164,7 +176,7 @@ function Dashboard() {
 
                             <motion.button
                                 onClick={togglePlay}
-                                className="p-5 rounded-full bg-gradient-to-tr from-pink-500 to-fuchsia-500 shadow-lg ring-2 ring-pink-300"
+                                className="p-5 rounded-full bg-gradient-to-tr from-teal-500 to-teal-300 shadow-lg ring-2 ring-teal-300"
                             >
                                 {playing ? <Pause size={28} /> : <Play size={28} />}
                             </motion.button>
@@ -172,15 +184,23 @@ function Dashboard() {
                             <button onClick={handleNextTrack} className="p-3 rounded-full hover:bg-white/10">
                                 <SkipForward />
                             </button>
-                            <button onClick={toggleRepeat} className={`p-2 rounded-full hover:bg-white/10 ${isRepeat && 'bg-white/10 ring-2 ring-cyan-400'}`}>
+                            <button
+                                onClick={toggleRepeat}
+                                className={`p-2 rounded-full hover:bg-white/10 ${isRepeat && 'bg-white/10 ring-2 ring-cyan-400'}`}
+                                style={{ borderColor: trackColor, color: trackColor }}
+                            >
                                 <Repeat />
                             </button>
 
                             <div className="flex items-center gap-2 ml-auto">
                                 {isMuted ? (
-                                    <button onClick={toggleMute}><VolumeX /></button>
+                                    <button onClick={toggleMute} className="p-2 rounded-full hover:bg-white/10 text-teal-500">
+                                        <VolumeX />
+                                    </button>
                                 ) : (
-                                    <button onClick={toggleMute}><Volume2 /></button>
+                                    <button onClick={toggleMute} className="p-2 rounded-full hover:bg-white/10 text-teal-500">
+                                        <Volume2 />
+                                    </button>
                                 )}
                                 <input
                                     type="range"
@@ -188,21 +208,12 @@ function Dashboard() {
                                     max="100"
                                     value={volume}
                                     onChange={(e) => setVolume(e.target.value)}
-                                    className={`accent-${volumeTrackColor.split(' ')[0].split('-')[1]}-500 w-28`}
+                                    className="accent-teal-500 w-28"
                                 />
                             </div>
                         </div>
-
-                        {playing && (
-                            <div className="flex items-end gap-1 mt-4 h-6 ml-2">
-                                <div className="w-1 h-2 bg-white animate-bounce"></div>
-                                <div className="w-1 h-4 bg-white animate-bounce delay-100"></div>
-                                <div className="w-1 h-3 bg-white animate-bounce delay-200"></div>
-                            </div>
-                        )}
                     </div>
                 </div>
-
 
                 <h3 className="text-2xl font-semibold mt-14 mb-6 tracking-tight">🎶 Playlist</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -210,12 +221,10 @@ function Dashboard() {
                         <div
                             key={index}
                             onClick={() => handleTrackClick(track, index)}
-                            className={`p-6 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl hover:bg-white/20 hover:scale-105 transition-all cursor-pointer shadow-md ${
-                                currentTrackIndex === index ? 'ring-2 ring-fuchsia-400' : ''
-                            }`}
+                            className={`p-6 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl hover:bg-white/20 hover:scale-105 transition-all cursor-pointer shadow-md ${currentTrackIndex === index ? 'ring-2 ring-teal-400' : ''}`}
                         >
-                            <h4 className="text-xl font-semibold mb-1">{track.title}</h4>
-                            <p className="text-sm text-white/60">{track.artist}</p>
+                            <h4 className="text-xl font-semibold">{track.title}</h4>
+                            <p className="text-white/70">{track.artist}</p>
                         </div>
                     ))}
                 </div>
