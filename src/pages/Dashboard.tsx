@@ -21,6 +21,7 @@ function Dashboard() {
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const [trackColor, setTrackColor] = useState('');
     const { theme } = useTheme();
+    const [isSeeking, setIsSeeking] = useState(false);
 
     const playlist = [
         { title: 'Blinding Lights', artist: 'The Weeknd', url: '/music/blinding-lights.mp3', image: '/images/blinding-lights.jpg' },
@@ -86,13 +87,23 @@ function Dashboard() {
     };
 
     const handleTimeUpdate = () => {
-        setCurrentTime(audioRef.current.currentTime);
-        setDuration(audioRef.current.duration);
+        if (!isSeeking) {
+            setCurrentTime(audioRef.current.currentTime);
+            setDuration(audioRef.current.duration);
+        }
     };
 
     const handleSeek = (e) => {
+        setIsSeeking(true);
         audioRef.current.currentTime = e.target.value;
         setCurrentTime(e.target.value);
+    };
+
+    const handleSeekEnd = () => {
+        setIsSeeking(false);
+        if (playing) {
+            audioRef.current.play();
+        }
     };
 
     const toggleMute = () => setIsMuted(!isMuted);
@@ -157,6 +168,8 @@ function Dashboard() {
                                 max={duration || 0}
                                 value={currentTime}
                                 onChange={handleSeek}
+                                onMouseUp={handleSeekEnd} // For mouse users
+                                onTouchEnd={handleSeekEnd} // For touch devices
                                 className="w-full mx-4 accent-teal-500 hover:accent-teal-300"
                             />
                             <span>{formatTime(duration)}</span>
