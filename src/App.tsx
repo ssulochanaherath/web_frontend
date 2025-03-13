@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { ThemeProvider } from './context/ThemeContext'; // Import the ThemeProvider
+import { ThemeProvider } from './context/ThemeContext';
 import "./App.css";
 import { RootLayout } from "./components/RootLayout";
 import Login from "./pages/Login.tsx";
