@@ -1,4 +1,3 @@
-// context/AudioContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AudioContext = createContext(null);
@@ -13,20 +12,23 @@ export const AudioProvider = ({ children }) => {
     const [currentTrack, setCurrentTrack] = useState(null);
 
     useEffect(() => {
-        // Clean up the audio instance when unmounting
+        // Clean up the audio instance when unmounting or switching tracks
         return () => {
             if (audio) {
                 audio.pause();
+                audio.currentTime = 0; // Reset the time when stopping
             }
         };
     }, [audio]);
 
     const playTrack = (track) => {
+        // Pause any current track
         if (audio) {
             audio.pause();
-            audio.currentTime = 0;
+            audio.currentTime = 0; // Reset the audio
         }
 
+        // Create a new audio instance for the new track
         const newAudio = new Audio(track.src);
         newAudio.play().then(() => {
             setIsPlaying(true);
@@ -34,9 +36,11 @@ export const AudioProvider = ({ children }) => {
             console.error('Error playing audio:', error);
         });
 
+        // Update state with the new track
         setAudio(newAudio);
         setCurrentTrack(track);
 
+        // Listen for when the track is playing or paused
         newAudio.ontimeupdate = () => {
             setIsPlaying(!newAudio.paused);
         };

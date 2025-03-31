@@ -105,7 +105,7 @@ function Browse() {
 
                 {currentTrack && (
                     <div className="mt-6">
-                        <h4 className="text-2xl font-semibold text-white">Now Playing:</h4>
+                        <h4 className="text-2xl font-semibold text-white"></h4>
                         <p className="text-xl text-white/80">
                             {currentTrack.name} by {currentTrack.artist}
                         </p>
@@ -116,6 +116,7 @@ function Browse() {
                             {isPlaying ? 'Pause' : 'Play'}
                         </button>
 
+                        {/* Sound Progress Bar */}
                         <div className="mt-4">
                             <input
                                 type="range"
@@ -125,9 +126,10 @@ function Browse() {
                                 onChange={handleSeek}
                                 className="w-full accent-purple-600 cursor-pointer"
                             />
-                            <span className="text-sm text-white/70">
-                                {formatTime(currentTime)} / {formatTime(duration)}
-                            </span>
+                            <div className="flex justify-between mt-2">
+                                <span className="text-sm text-white/70">{formatTime(currentTime)}</span>
+                                <span className="text-sm text-white/70">{formatTime(duration)}</span>
+                            </div>
                         </div>
                     </div>
                 )}
