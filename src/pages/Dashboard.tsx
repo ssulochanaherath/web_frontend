@@ -12,11 +12,11 @@ function Dashboard() {
     const audioRef = useRef(null);
 
     const playlist = [
-        { title: 'Blinding Lights', artist: 'The Weeknd', src: '/music/blinding-lights.mp3' },
+        { title: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
         { title: 'Levitating', artist: 'Dua Lipa', src: '/music/levitating.mp3' },
-        { title: 'Watermelon Sugar', artist: 'Harry Styles', src: '/music/watermelon-sugar.mp3' },
-        { title: 'Save Your Tears', artist: 'The Weeknd', src: '/music/save-your-tears.mp3' },
-        { title: 'As It Was', artist: 'Harry Styles', src: '/music/as-it-was.mp3' },
+        { title: 'Starboy', artist: 'The Weekend', src: '/music/starboy.mp3' },
+        { title: 'Hold My Hand', artist: 'Michael Jackson', src: '/music/hold-my-hand.mp3' },
+        { title: 'Angel', artist: 'Shaggy', src: '/music/angel.mp3' },
     ];
 
     const currentTrack = playlist[currentTrackIndex];
@@ -138,8 +138,23 @@ function Dashboard() {
                                 </button>
                             </div>
 
-                            {/* Progress Bar */}
-                            <div className="flex items-center gap-4">
+                            {/* Volume Control - Now Above the Time Bar */}
+                            <div className="flex items-center gap-4 mt-4 justify-end">
+                                <Volume2 />
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={volume}
+                                    onChange={handleVolumeChange}
+                                    className="w-24 accent-teal-600 cursor-pointer"
+                                    style={{ transform: 'scale(0.8)' }}
+                                />
+                                <span className="text-sm text-white/70">{volume}%</span>
+                            </div>
+
+                            {/* Progress Bar - Below the Volume Bar */}
+                            <div className="flex items-center gap-4 mt-4">
                                 <span className="text-sm text-white/70">{formatTime(currentTime)}</span>
                                 <input
                                     type="range"
@@ -149,20 +164,7 @@ function Dashboard() {
                                     onChange={handleSeek}
                                     className="w-full accent-teal-600 cursor-pointer"
                                 />
-                                <span className="text-sm text-white/70">{formatTime(duration)}</span>
-                            </div>
 
-                            {/* Volume Control */}
-                            <div className="flex items-center gap-4 mt-4">
-                                <Volume2 />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={volume}
-                                    onChange={handleVolumeChange}
-                                    className="w-full accent-teal-600 cursor-pointer"
-                                />
                                 <span className="text-sm text-white/70">{volume}%</span>
                             </div>
                         </div>
