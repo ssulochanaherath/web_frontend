@@ -50,12 +50,13 @@ function Dashboard() {
     };
 
     useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.src = playlist[currentTrackIndex].src;
-            audioRef.current.load();
-            audioRef.current.play()
+        const audio = audioRef.current;
+        if (audio) {
+            audio.src = playlist[currentTrackIndex].src;
+            audio.load();
+            audio.play()
                 .then(() => setPlaying(true))
-                .catch(error => console.error("Playback error:", error));
+                .catch((error) => console.error("Playback error:", error));
         }
     }, [currentTrackIndex]);
 
@@ -89,16 +90,16 @@ function Dashboard() {
     };
 
     useEffect(() => {
-        const audio = audioRef.current;
-        if (audio) {
-            audio.addEventListener('ended', handleNextTrack);
-        }
-        return () => {
-            if (audio) {
-                audio.removeEventListener('ended', handleNextTrack);
+        if (audioRef.current) {
+            audioRef.current.src = playlist[currentTrackIndex].src;
+            audioRef.current.load();
+
+            // If the track was playing, resume playing after switching
+            if (playing) {
+                audioRef.current.play().catch((error) => console.error("Playback error:", error));
             }
-        };
-    }, [currentTrackIndex]);
+        }
+    }, [currentTrackIndex, playing]);
 
     return (
         <div className={`min-h-screen flex font-sans transition-all duration-500 ${getThemeClass()}`}>
@@ -138,7 +139,7 @@ function Dashboard() {
                                 </button>
                             </div>
 
-                            {/* Volume Control - Now Above the Time Bar */}
+                            {/* Volume Control */}
                             <div className="flex items-center gap-4 mt-4 justify-end">
                                 <Volume2 />
                                 <input
@@ -153,7 +154,7 @@ function Dashboard() {
                                 <span className="text-sm text-white/70">{volume}%</span>
                             </div>
 
-                            {/* Progress Bar - Below the Volume Bar */}
+                            {/* Progress Bar */}
                             <div className="flex items-center gap-4 mt-4">
                                 <span className="text-sm text-white/70">{formatTime(currentTime)}</span>
                                 <input
@@ -164,8 +165,7 @@ function Dashboard() {
                                     onChange={handleSeek}
                                     className="w-full accent-teal-600 cursor-pointer"
                                 />
-
-                                <span className="text-sm text-white/70">{volume}%</span>
+                                <span className="text-sm text-white/70">{formatTime(duration)}</span>
                             </div>
                         </div>
                     </div>
@@ -188,12 +188,7 @@ function Dashboard() {
                 </div>
             </main>
 
-            <audio
-                ref={audioRef}
-                src={currentTrack.src}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleTimeUpdate}
-            />
+            <audio ref={audioRef} onTimeUpdate={handleTimeUpdate} onLoadedMetadata={handleTimeUpdate} />
         </div>
     );
 }
