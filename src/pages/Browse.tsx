@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useTheme } from '../context/ThemeContext';
 import { useFavourites } from '../context/FavouritesContext';
 import { FaHeart } from 'react-icons/fa';
+import { useAudio } from '../context/AudioContext'; // Import the AudioContext hook
 
 function Browse() {
     const { theme } = useTheme();
     const { toggleFavourite, favourites } = useFavourites();
+    const { audio, isPlaying, currentTrack, playTrack, togglePlayPause } = useAudio(); // Use AudioContext
     const [searchTerm, setSearchTerm] = useState('');
-    const [currentTrack, setCurrentTrack] = useState(null);
-    const [audio, setAudio] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
 
     const tracks = [
         { name: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
@@ -37,33 +38,25 @@ function Browse() {
         }
     };
 
-    const playTrack = (track) => {
+    useEffect(() => {
         if (audio) {
-            audio.pause();
-            audio.currentTime = 0;
+            audio.ontimeupdate = () => {
+                setCurrentTime(audio.currentTime);
+                setDuration(audio.duration);
+            };
         }
+    }, [audio]);
 
-        const newAudio = new Audio(track.src);
-        newAudio.play().then(() => {
-            setIsPlaying(true);
-        }).catch(error => {
-            console.error('Error playing audio:', error);
-        });
-
-        setAudio(newAudio);
-        setCurrentTrack(track);
+    const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (audio) {
+            audio.currentTime = parseFloat(e.target.value);
+        }
     };
 
-    const togglePlayPause = () => {
-        if (audio) {
-            if (isPlaying) {
-                audio.pause();
-                setIsPlaying(false);
-            } else {
-                audio.play();
-                setIsPlaying(true);
-            }
-        }
+    const formatTime = (time: number) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
     return (
@@ -122,6 +115,20 @@ function Browse() {
                         >
                             {isPlaying ? 'Pause' : 'Play'}
                         </button>
+
+                        <div className="mt-4">
+                            <input
+                                type="range"
+                                min="0"
+                                max={duration || 0}
+                                value={currentTime}
+                                onChange={handleSeek}
+                                className="w-full accent-purple-600 cursor-pointer"
+                            />
+                            <span className="text-sm text-white/70">
+                                {formatTime(currentTime)} / {formatTime(duration)}
+                            </span>
+                        </div>
                     </div>
                 )}
             </main>

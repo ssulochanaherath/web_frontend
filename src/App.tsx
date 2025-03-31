@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ThemeProvider } from './context/ThemeContext';
 import { FavouritesProvider } from './context/FavouritesContext';
+import { AudioProvider } from './context/AudioContext'; // Import the AudioProvider
 import "./App.css";
 import { RootLayout } from "./components/RootLayout";
 import Login from "./pages/Login.tsx";
@@ -25,9 +26,11 @@ const router = createBrowserRouter([
 
 function App() {
     return (
-        <ThemeProvider> {/* Wrap app with ThemeProvider */}
-            <FavouritesProvider> {/* Wrap app with FavouritesProvider */}
-                <RouterProvider router={router} />
+        <ThemeProvider>
+            <FavouritesProvider>
+                <AudioProvider> {/* Add AudioProvider here */}
+                    <RouterProvider router={router} />
+                </AudioProvider>
             </FavouritesProvider>
         </ThemeProvider>
     );

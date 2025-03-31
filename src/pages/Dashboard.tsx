@@ -8,8 +8,8 @@ function Dashboard() {
     const [volume, setVolume] = useState(50);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-    const audioRef = useRef(null);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // Ensure this is defined correctly
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     const playlist = [
         { title: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
@@ -24,20 +24,22 @@ function Dashboard() {
 
     const togglePlay = () => {
         if (playing) {
-            audioRef.current.pause();
+            audioRef.current?.pause();
         } else {
-            audioRef.current.play();
+            audioRef.current?.play();
         }
         setPlaying(!playing);
     };
 
-    const handleVolumeChange = (e) => {
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newVolume = e.target.value;
         setVolume(newVolume);
-        audioRef.current.volume = newVolume / 100;
+        if (audioRef.current) {
+            audioRef.current.volume = newVolume / 100;
+        }
     };
 
-    const handleTrackClick = (index) => {
+    const handleTrackClick = (index: number) => {
         setCurrentTrackIndex(index);
     };
 
@@ -56,22 +58,26 @@ function Dashboard() {
             audio.load();
             audio.play()
                 .then(() => setPlaying(true))
-                .catch((error) => console.error("Playback error:", error));
+                .catch((error) => console.error('Playback error:', error));
         }
     }, [currentTrackIndex]);
 
     const handleTimeUpdate = () => {
-        setCurrentTime(audioRef.current.currentTime);
-        setDuration(audioRef.current.duration);
+        if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+            setDuration(audioRef.current.duration);
+        }
     };
 
-    const handleSeek = (e) => {
+    const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTime = e.target.value;
-        audioRef.current.currentTime = newTime;
+        if (audioRef.current) {
+            audioRef.current.currentTime = newTime;
+        }
         setCurrentTime(newTime);
     };
 
-    const formatTime = (time) => {
+    const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
