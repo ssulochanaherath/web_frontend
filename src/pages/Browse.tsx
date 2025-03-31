@@ -1,12 +1,12 @@
-// pages/Browse.jsx
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useTheme } from '../context/ThemeContext';
 import { useFavourites } from '../context/FavouritesContext';
+import { FaHeart } from 'react-icons/fa';
 
 function Browse() {
     const { theme } = useTheme();
-    const { toggleFavourite, favourites } = useFavourites(); // Use context
+    const { toggleFavourite, favourites } = useFavourites();
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTrack, setCurrentTrack] = useState(null);
     const [audio, setAudio] = useState(null);
@@ -38,18 +38,15 @@ function Browse() {
     };
 
     const playTrack = (track) => {
-        console.log('Playing track:', track.name);
         if (audio) {
             audio.pause();
             audio.currentTime = 0;
-            console.log('Paused and reset previous track');
         }
 
         const newAudio = new Audio(track.src);
         newAudio.play().then(() => {
-            console.log('Audio started playing');
             setIsPlaying(true);
-        }).catch((error) => {
+        }).catch(error => {
             console.error('Error playing audio:', error);
         });
 
@@ -75,7 +72,6 @@ function Browse() {
             <main className="flex-1 p-10">
                 <h2 className="text-4xl font-bold mb-6 tracking-tight">🔍 Browse</h2>
 
-                {/* Search bar */}
                 <div className="mb-6">
                     <input
                         type="text"
@@ -91,46 +87,35 @@ function Browse() {
                     <p className="text-white/70 mb-6">Explore the latest music, albums, and artists.</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Display filtered tracks */}
                         {filteredTracks.map((track, index) => (
                             <div
                                 key={index}
-                                className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow"
+                                className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow flex justify-between items-center"
                                 onClick={() => playTrack(track)}
                             >
-                                <h4 className="text-lg font-semibold">{track.name}</h4>
-                                <p className="text-sm text-white/60">{track.artist}</p>
-
-                                {/* Favourite button */}
+                                <div>
+                                    <h4 className="text-lg font-semibold">{track.name}</h4>
+                                    <p className="text-sm text-white/60">{track.artist}</p>
+                                </div>
                                 <button
                                     onClick={(e) => {
-                                        e.stopPropagation(); // Prevent triggering playTrack on button click
+                                        e.stopPropagation();
                                         toggleFavourite(track);
                                     }}
-                                    className={`mt-2 px-4 py-2 rounded-lg text-sm ${
-                                        favourites.some(fav => fav.name === track.name)
-                                            ? 'bg-yellow-500 text-black'
-                                            : 'bg-white/20 text-white'
-                                    } hover:bg-yellow-400 transition-all duration-200`}
                                 >
-                                    {favourites.some(fav => fav.name === track.name)
-                                        ? 'Remove from Favourites'
-                                        : 'Add to Favourites'}
+                                    <FaHeart className={`text-xl transition-all duration-200 ${favourites.some(fav => fav.name === track.name) ? 'text-red-500' : 'text-white/40'}`} />
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Display current track name */}
                 {currentTrack && (
                     <div className="mt-6">
                         <h4 className="text-2xl font-semibold text-white">Now Playing:</h4>
                         <p className="text-xl text-white/80">
                             {currentTrack.name} by {currentTrack.artist}
                         </p>
-
-                        {/* Pause/Play button */}
                         <button
                             onClick={togglePlayPause}
                             className="mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200"
