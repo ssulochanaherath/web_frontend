@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ThemeProvider } from './context/ThemeContext';
 import { FavouritesProvider } from './context/FavouritesContext';
-import { AudioProvider } from './context/AudioContext'; // Import the AudioProvider
+import { AudioProvider } from './context/AudioContext';
 import "./App.css";
 import { RootLayout } from "./components/RootLayout";
 import Login from "./pages/Login.tsx";
