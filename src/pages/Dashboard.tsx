@@ -26,7 +26,7 @@ function Dashboard() {
         if (playing) {
             audioRef.current.pause();
         } else {
-            audioRef.current.play();
+            audioRef.current.play().catch((error) => console.error("Playback error:", error));
         }
         setPlaying(!playing);
     };
@@ -54,8 +54,7 @@ function Dashboard() {
         if (audio) {
             audio.src = playlist[currentTrackIndex].src;
             audio.load();
-            audio.play()
-                .then(() => setPlaying(true))
+            audio.play().then(() => setPlaying(true))
                 .catch((error) => console.error("Playback error:", error));
         }
     }, [currentTrackIndex]);

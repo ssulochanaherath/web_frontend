@@ -1,8 +1,25 @@
+import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useTheme } from '../context/ThemeContext';
 
 function Browse() {
     const { theme } = useTheme();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentTrack, setCurrentTrack] = useState(null);
+    const [audio, setAudio] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false); // Track whether the audio is playing or paused
+
+    const tracks = [
+        { name: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
+        { name: 'Levitating', artist: 'Dua Lipa', src: '/music/levitating.mp3' },
+        { name: 'Starboy', artist: 'The Weekend', src: '/music/starboy.mp3' },
+        { name: 'Hold My Hand', artist: 'Michael Jackson', src: '/music/hold-my-hand.mp3' },
+        { name: 'Angel', artist: 'Shaggy', src: '/music/angel.mp3' },
+    ];
+
+    const filteredTracks = tracks.filter(track =>
+        track.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const getThemeClass = () => {
         switch (theme) {
@@ -15,32 +32,89 @@ function Browse() {
         }
     };
 
+    const playTrack = (track) => {
+        console.log('Playing track:', track.name);
+        if (audio) {
+            audio.pause(); // Pause the current audio
+            audio.currentTime = 0; // Reset current time to the beginning
+            console.log('Paused and reset previous track');
+        }
+
+        const newAudio = new Audio(track.src); // Create new audio element
+        newAudio.play().then(() => {
+            console.log('Audio started playing');
+            setIsPlaying(true); // Set the track to playing
+        }).catch((error) => {
+            console.error('Error playing audio:', error); // Handle potential errors
+        });
+
+        setAudio(newAudio); // Store the audio reference
+        setCurrentTrack(track); // Set the current track
+    };
+
+    const togglePlayPause = () => {
+        if (audio) {
+            if (isPlaying) {
+                audio.pause(); // Pause the track
+                setIsPlaying(false); // Update state
+            } else {
+                audio.play(); // Play the track
+                setIsPlaying(true); // Update state
+            }
+        }
+    };
+
     return (
         <div className={`min-h-screen flex ${getThemeClass()} font-sans transition-all duration-500`}>
             <Sidebar />
             <main className="flex-1 p-10">
                 <h2 className="text-4xl font-bold mb-6 tracking-tight">🔍 Browse</h2>
 
+                {/* Search bar */}
+                <div className="mb-6">
+                    <input
+                        type="text"
+                        placeholder="Search for a song..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full p-4 rounded-lg border bg-white/20 text-white placeholder-white/60 focus:outline-none"
+                    />
+                </div>
+
                 <div className="bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl transition duration-300">
                     <h3 className="text-2xl font-semibold mb-4">Discover New Tracks</h3>
                     <p className="text-white/70 mb-6">Explore the latest music, albums, and artists.</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Example content for Browse page */}
-                        <div className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow">
-                            <h4 className="text-lg font-semibold">Track 1</h4>
-                            <p className="text-sm text-white/60">Artist 1</p>
-                        </div>
-                        <div className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow">
-                            <h4 className="text-lg font-semibold">Track 2</h4>
-                            <p className="text-sm text-white/60">Artist 2</p>
-                        </div>
-                        <div className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow">
-                            <h4 className="text-lg font-semibold">Track 3</h4>
-                            <p className="text-sm text-white/60">Artist 3</p>
-                        </div>
+                        {/* Display filtered tracks */}
+                        {filteredTracks.map((track, index) => (
+                            <div
+                                key={index}
+                                className="p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-purple-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow"
+                                onClick={() => playTrack(track)}
+                            >
+                                <h4 className="text-lg font-semibold">{track.name}</h4>
+                                <p className="text-sm text-white/60">{track.artist}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
+
+                {/* Display current track name */}
+                {currentTrack && (
+                    <div className="mt-6">
+                        <h4 className="text-2xl font-semibold text-white">Now Playing:</h4>
+                        <p className="text-xl text-white/80">{currentTrack.name} by {currentTrack.artist}</p>
+
+                        {/* Pause/Play button */}
+                        <button
+                            onClick={togglePlayPause}
+                            className="mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200"
+                        >
+                            {isPlaying ? 'Pause' : 'Play'}
+                        </button>
+                    </div>
+                )}
             </main>
         </div>
     );
