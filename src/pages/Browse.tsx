@@ -7,7 +7,8 @@ function Browse() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTrack, setCurrentTrack] = useState(null);
     const [audio, setAudio] = useState(null);
-    const [isPlaying, setIsPlaying] = useState(false); // Track whether the audio is playing or paused
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [favourites, setFavourites] = useState([]); // New state for favourites
 
     const tracks = [
         { name: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
@@ -35,33 +36,46 @@ function Browse() {
     const playTrack = (track) => {
         console.log('Playing track:', track.name);
         if (audio) {
-            audio.pause(); // Pause the current audio
-            audio.currentTime = 0; // Reset current time to the beginning
+            audio.pause();
+            audio.currentTime = 0;
             console.log('Paused and reset previous track');
         }
 
-        const newAudio = new Audio(track.src); // Create new audio element
+        const newAudio = new Audio(track.src);
         newAudio.play().then(() => {
             console.log('Audio started playing');
-            setIsPlaying(true); // Set the track to playing
+            setIsPlaying(true);
         }).catch((error) => {
-            console.error('Error playing audio:', error); // Handle potential errors
+            console.error('Error playing audio:', error);
         });
 
-        setAudio(newAudio); // Store the audio reference
-        setCurrentTrack(track); // Set the current track
+        setAudio(newAudio);
+        setCurrentTrack(track);
     };
 
     const togglePlayPause = () => {
         if (audio) {
             if (isPlaying) {
-                audio.pause(); // Pause the track
-                setIsPlaying(false); // Update state
+                audio.pause();
+                setIsPlaying(false);
             } else {
-                audio.play(); // Play the track
-                setIsPlaying(true); // Update state
+                audio.play();
+                setIsPlaying(true);
             }
         }
+    };
+
+    // Function to toggle a song in the favourites list
+    const toggleFavourite = (track) => {
+        setFavourites((prevFavourites) => {
+            if (prevFavourites.some(fav => fav.name === track.name)) {
+                // Remove from favourites
+                return prevFavourites.filter(fav => fav.name !== track.name);
+            } else {
+                // Add to favourites
+                return [...prevFavourites, track];
+            }
+        });
     };
 
     return (
@@ -95,6 +109,21 @@ function Browse() {
                             >
                                 <h4 className="text-lg font-semibold">{track.name}</h4>
                                 <p className="text-sm text-white/60">{track.artist}</p>
+
+                                {/* Favourite button */}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent triggering playTrack on button click
+                                        toggleFavourite(track);
+                                    }}
+                                    className={`mt-2 px-4 py-2 rounded-lg text-sm ${
+                                        favourites.some(fav => fav.name === track.name)
+                                            ? 'bg-yellow-500 text-black'
+                                            : 'bg-white/20 text-white'
+                                    } hover:bg-yellow-400 transition-all duration-200`}
+                                >
+                                    {favourites.some(fav => fav.name === track.name) ? 'Remove from Favourites' : 'Add to Favourites'}
+                                </button>
                             </div>
                         ))}
                     </div>

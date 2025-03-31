@@ -26,7 +26,7 @@ function Dashboard() {
         if (playing) {
             audioRef.current.pause();
         } else {
-            audioRef.current.play().catch((error) => console.error("Playback error:", error));
+            audioRef.current.play();
         }
         setPlaying(!playing);
     };
@@ -54,7 +54,8 @@ function Dashboard() {
         if (audio) {
             audio.src = playlist[currentTrackIndex].src;
             audio.load();
-            audio.play().then(() => setPlaying(true))
+            audio.play()
+                .then(() => setPlaying(true))
                 .catch((error) => console.error("Playback error:", error));
         }
     }, [currentTrackIndex]);
@@ -89,16 +90,16 @@ function Dashboard() {
     };
 
     useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.src = playlist[currentTrackIndex].src;
-            audioRef.current.load();
-
-            // If the track was playing, resume playing after switching
-            if (playing) {
-                audioRef.current.play().catch((error) => console.error("Playback error:", error));
-            }
+        const audio = audioRef.current;
+        if (audio) {
+            audio.addEventListener('ended', handleNextTrack);
         }
-    }, [currentTrackIndex, playing]);
+        return () => {
+            if (audio) {
+                audio.removeEventListener('ended', handleNextTrack);
+            }
+        };
+    }, []);
 
     return (
         <div className={`min-h-screen flex font-sans transition-all duration-500 ${getThemeClass()}`}>
