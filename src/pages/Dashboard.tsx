@@ -8,7 +8,7 @@ function Dashboard() {
     const [volume, setVolume] = useState(50);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // Ensure this is defined correctly
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const audioRef = useRef<HTMLAudioElement>(null);
 
     const playlist = [
@@ -56,11 +56,9 @@ function Dashboard() {
         if (audio) {
             audio.src = playlist[currentTrackIndex].src;
             audio.load();
-            audio.play()
-                .then(() => setPlaying(true))
-                .catch((error) => console.error('Playback error:', error));
         }
     }, [currentTrackIndex]);
+
 
     const handleTimeUpdate = () => {
         if (audioRef.current) {
@@ -114,9 +112,9 @@ function Dashboard() {
             <main className="flex-1 p-8 md:p-12">
                 <h2 className="text-4xl font-bold mb-8 tracking-tight">🎧 Now Playing</h2>
 
-                <div className="bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl transition duration-300">
+                <div className="bg-gradient-to-r from-teal-500 to-cyan-400 backdrop-blur-lg p-8 rounded-3xl shadow-2xl transition duration-300">
                     <div className="flex flex-col md:flex-row items-center gap-8">
-                        <div className="w-44 h-44 bg-gradient-to-br from-teal-600 to-cyan-400 rounded-2xl flex justify-center items-center text-xl font-bold shadow-inner shadow-teal-900 text-center">
+                        <div className="w-44 h-44 bg-gradient-to-br from-teal-600 to-cyan-400 rounded-2xl flex justify-center items-center text-xl font-bold shadow-inner text-center">
                             🎵 {currentTrack.title}
                         </div>
 
@@ -127,7 +125,7 @@ function Dashboard() {
                             <div className="flex items-center gap-5 mb-4">
                                 <button
                                     onClick={handlePrevTrack}
-                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200"
+                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-110 transition-all duration-200"
                                 >
                                     <SkipBack />
                                 </button>
@@ -139,7 +137,7 @@ function Dashboard() {
                                 </button>
                                 <button
                                     onClick={handleNextTrack}
-                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-105 transition-all duration-200"
+                                    className="bg-teal-600 p-3 rounded-full hover:bg-teal-500 hover:scale-110 transition-all duration-200"
                                 >
                                     <SkipForward />
                                 </button>
@@ -183,7 +181,7 @@ function Dashboard() {
                         <div
                             key={index}
                             onClick={() => handleTrackClick(index)}
-                            className={`p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-teal-700/30 hover:scale-[1.02] transition-all duration-200 cursor-pointer shadow ${
+                            className={`p-5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-teal-700/30 hover:scale-105 transition-all duration-200 cursor-pointer shadow ${
                                 index === currentTrackIndex ? 'ring-2 ring-teal-500' : ''
                             }`}
                         >
