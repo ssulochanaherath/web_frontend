@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Browse from "./pages/Browse.tsx";
 import Library from "./pages/Library.tsx";
 import Settings from "./pages/Settings.tsx";
+import Signup from "./pages/Signup.tsx";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
             { path: "/browse", element: <Browse /> },
             { path: "/library", element: <Library /> },
             { path: "/settings", element: <Settings /> },
+            { path: "/signup", element: <Signup /> },
         ],
     },
 ]);

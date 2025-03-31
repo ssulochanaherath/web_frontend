@@ -6,7 +6,7 @@ const Sidebar = () => {
     const location = useLocation();
 
     const handleSignOut = () => {
-        navigate('/login');
+        navigate('/');
     };
 
     const navLinks = [

@@ -9,6 +9,7 @@ body {
     background-color: #1e1e1e;
     color: #fff;
     transition: all 0.3s ease;
+    @apply bg-gradient-to-br from-black via-zinc-900 to-gray-950 bg-fixed;
 }
 
 .dashboard-container {

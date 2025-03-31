@@ -56,8 +56,11 @@ function Dashboard() {
         if (audio) {
             audio.src = playlist[currentTrackIndex].src;
             audio.load();
+            if (playing) {
+                audio.play();
+            }
         }
-    }, [currentTrackIndex]);
+    }, [currentTrackIndex, playing]);
 
 
     const handleTimeUpdate = () => {
