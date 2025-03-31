@@ -39,22 +39,25 @@ function Dashboard() {
 
     const handleTrackClick = (index) => {
         setCurrentTrackIndex(index);
-        setPlaying(true); // Ensure the player is in "playing" state
-        if (audioRef.current) {
-            audioRef.current.src = playlist[index].src;
-            audioRef.current.play(); // Automatically play the selected track
-        }
     };
 
     const handleNextTrack = () => {
-        let newIndex = (currentTrackIndex + 1) % playlist.length;
-        handleTrackClick(newIndex);
+        setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % playlist.length);
     };
 
     const handlePrevTrack = () => {
-        let newIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-        handleTrackClick(newIndex);
+        setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + playlist.length) % playlist.length);
     };
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.src = playlist[currentTrackIndex].src;
+            audioRef.current.load();
+            audioRef.current.play()
+                .then(() => setPlaying(true))
+                .catch(error => console.error("Playback error:", error));
+        }
+    }, [currentTrackIndex]);
 
     const handleTimeUpdate = () => {
         setCurrentTime(audioRef.current.currentTime);
@@ -85,7 +88,6 @@ function Dashboard() {
         }
     };
 
-    // Auto-play next song when the current one ends
     useEffect(() => {
         const audio = audioRef.current;
         if (audio) {
