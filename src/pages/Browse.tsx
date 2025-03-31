@@ -1,14 +1,16 @@
+// pages/Browse.jsx
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useTheme } from '../context/ThemeContext';
+import { useFavourites } from '../context/FavouritesContext';
 
 function Browse() {
     const { theme } = useTheme();
+    const { toggleFavourite, favourites } = useFavourites(); // Use context
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTrack, setCurrentTrack] = useState(null);
     const [audio, setAudio] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [favourites, setFavourites] = useState([]); // New state for favourites
 
     const tracks = [
         { name: 'Blinding Lights', artist: 'The Weekend', src: '/music/blinding-lights.mp3' },
@@ -30,6 +32,8 @@ function Browse() {
                 return 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 text-white';
             case 'dark':
                 return 'bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white';
+            default:
+                return '';
         }
     };
 
@@ -63,19 +67,6 @@ function Browse() {
                 setIsPlaying(true);
             }
         }
-    };
-
-    // Function to toggle a song in the favourites list
-    const toggleFavourite = (track) => {
-        setFavourites((prevFavourites) => {
-            if (prevFavourites.some(fav => fav.name === track.name)) {
-                // Remove from favourites
-                return prevFavourites.filter(fav => fav.name !== track.name);
-            } else {
-                // Add to favourites
-                return [...prevFavourites, track];
-            }
-        });
     };
 
     return (
@@ -122,7 +113,9 @@ function Browse() {
                                             : 'bg-white/20 text-white'
                                     } hover:bg-yellow-400 transition-all duration-200`}
                                 >
-                                    {favourites.some(fav => fav.name === track.name) ? 'Remove from Favourites' : 'Add to Favourites'}
+                                    {favourites.some(fav => fav.name === track.name)
+                                        ? 'Remove from Favourites'
+                                        : 'Add to Favourites'}
                                 </button>
                             </div>
                         ))}
@@ -133,7 +126,9 @@ function Browse() {
                 {currentTrack && (
                     <div className="mt-6">
                         <h4 className="text-2xl font-semibold text-white">Now Playing:</h4>
-                        <p className="text-xl text-white/80">{currentTrack.name} by {currentTrack.artist}</p>
+                        <p className="text-xl text-white/80">
+                            {currentTrack.name} by {currentTrack.artist}
+                        </p>
 
                         {/* Pause/Play button */}
                         <button
