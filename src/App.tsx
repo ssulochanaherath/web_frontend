@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ThemeProvider } from './context/ThemeContext';
 import "./App.css";
+import "./App.css";
 import { RootLayout } from "./components/RootLayout";
 import Login from "./pages/Login.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
