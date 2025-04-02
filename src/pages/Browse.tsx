@@ -49,7 +49,9 @@ function Browse() {
 
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (audio) {
-            audio.currentTime = parseFloat(e.target.value);
+            const newTime = parseFloat(e.target.value);
+            audio.currentTime = newTime;
+            setCurrentTime(newTime); // Manually update the state to reflect the change
         }
     };
 
@@ -104,32 +106,67 @@ function Browse() {
                 </div>
 
                 {currentTrack && (
-                    <div className="mt-6">
-                        <h4 className="text-2xl font-semibold text-white"></h4>
-                        <p className="text-xl text-white/80">
-                            {currentTrack.name} by {currentTrack.artist}
-                        </p>
-                        <button
-                            onClick={togglePlayPause}
-                            className="mt-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200"
-                        >
-                            {isPlaying ? 'Pause' : 'Play'}
-                        </button>
+                    <div className="mt-6 bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl transition duration-300">
+                        <div className="flex items-center space-x-6">
+                            <div className="w-24 h-24 rounded-lg overflow-hidden shadow-lg">
+                                {/* Replace with dynamic album art if available */}
+                                <img src="/path/to/album-art.jpg" alt="Album Art" className="object-cover w-full h-full" />
+                            </div>
+                            <div className="flex flex-col justify-center">
+                                <p className="text-xl font-semibold text-white">{currentTrack.name}</p>
+                                <p className="text-sm text-white/60">{currentTrack.artist}</p>
+                            </div>
+                        </div>
 
-                        {/* Sound Progress Bar */}
+                        <div className="mt-6 flex justify-center items-center space-x-6">
+                            <button
+                                onClick={() => {/* Handle skip to previous track */}}
+                                className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
+                            >
+                                <FaHeart className="rotate-180" />
+                            </button>
+                            <button
+                                onClick={togglePlayPause}
+                                className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
+                            >
+                                {isPlaying ? 'Pause' : 'Play'}
+                            </button>
+                            <button
+                                onClick={() => {/* Handle skip to next track */}}
+                                className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
+                            >
+                                <FaHeart />
+                            </button>
+                        </div>
+
+                        {/* Progress Bar */}
                         <div className="mt-4">
                             <input
                                 type="range"
                                 min="0"
                                 max={duration || 0}
                                 value={currentTime}
-                                onChange={handleSeek}
+                                onChange={handleSeek} // Use handleSeek to update currentTime
                                 className="w-full accent-purple-600 cursor-pointer"
                             />
                             <div className="flex justify-between mt-2">
                                 <span className="text-sm text-white/70">{formatTime(currentTime)}</span>
                                 <span className="text-sm text-white/70">{formatTime(duration)}</span>
                             </div>
+                        </div>
+
+                        {/* Volume Control */}
+                        <div className="mt-4 flex justify-between items-center">
+                            <label className="text-white/70 text-sm">Volume</label>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={audio?.volume || 1}
+                                onChange={(e) => audio && (audio.volume = parseFloat(e.target.value))}
+                                className="w-full accent-purple-600 cursor-pointer"
+                            />
                         </div>
                     </div>
                 )}
