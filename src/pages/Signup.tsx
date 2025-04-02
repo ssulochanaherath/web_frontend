@@ -18,7 +18,7 @@ function Signup() {
             setMessage('Passwords do not match.');
         } else {
             setMessage(`🎶 Account created for: ${email}`);
-            setTimeout(() => navigate('/dashboard'), 1000);
+            setTimeout(() => navigate('/'), 1000);
         }
     };
 
