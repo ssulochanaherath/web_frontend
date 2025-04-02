@@ -152,19 +152,29 @@ function Browse() {
 
                         <div className="mt-6 flex justify-center items-center space-x-6">
                             <button
-                                onClick={() => {/* Handle skip to previous track */}}
+                                onClick={() => {
+                                    const currentIndex = tracks.findIndex(track => track.src === currentTrack.src);
+                                    const prevTrack = tracks[currentIndex - 1] || tracks[tracks.length - 1]; // Wrap around to last track if at the beginning
+                                    playTrack(prevTrack); // Play the previous track
+                                }}
                                 className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
                             >
                                 ⏮️
                             </button>
+
                             <button
                                 onClick={togglePlayPause}
                                 className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
                             >
                                 {isPlaying ? 'Pause' : 'Play'}
                             </button>
+
                             <button
-                                onClick={() => {/* Handle skip to next track */}}
+                                onClick={() => {
+                                    const currentIndex = tracks.findIndex(track => track.src === currentTrack.src);
+                                    const nextTrack = tracks[currentIndex + 1] || tracks[0]; // Wrap around to first track if at the end
+                                    playTrack(nextTrack); // Play the next track
+                                }}
                                 className="p-4 bg-purple-600 rounded-full text-white shadow-lg hover:bg-purple-700 transition-all duration-200"
                             >
                                 ⏭️
