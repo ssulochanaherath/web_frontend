@@ -165,7 +165,7 @@ function Browse() {
                                 step="0.01"
                                 value={audio?.volume || 1}
                                 onChange={(e) => audio && (audio.volume = parseFloat(e.target.value))}
-                                className="w-full accent-purple-600 cursor-pointer"
+                                className="w-40 accent-purple-600 cursor-pointer"  // Adjusted width to make it smaller
                             />
                         </div>
                     </div>
